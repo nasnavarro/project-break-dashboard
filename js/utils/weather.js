@@ -115,14 +115,33 @@ function renderOtherCities(cities) {
 
 // Función que carga el pronóstico de la ciudad dada, renderiza los datos en el DOM y aplica el fondo correspondiente a esa ciudad
 function loadCity(cityName) {
+  showLoading(currentContainer);
+  showLoading(hourlyContainer);
   fetchWeatherAPI(cityName)
     .then(data => {
+      hideLoading(currentContainer);
+      hideLoading(hourlyContainer);
       renderCurrent(data.current, data.location, data.forecast);
       renderHourly(data.hourly);
       applyCityBackground(cityName);
-      document.querySelector('.weather-current-container').scrollIntoView({ behavior: 'smooth' });
+      currentContainer.scrollIntoView({ behavior: 'smooth' });
     })
-    .catch(err => console.error('[weather] loadCity:', err.message));
+    .catch(err => {
+      hideLoading(currentContainer);
+      hideLoading(hourlyContainer);
+      console.error('[weather] loadCity:', err.message);
+    });
+}
+
+function showLoading(container) {
+  const overlay = document.createElement('div');
+  overlay.className = 'weather-loading-overlay';
+  overlay.textContent = 'Cargando...';
+  container.appendChild(overlay);
+}
+
+function hideLoading(container) {
+  container.querySelector('.weather-loading-overlay')?.remove();
 }
 
 // Función que resuelve la URL de la imagen de fondo según el tamaño de pantalla actual (sm, md o lg)
@@ -184,19 +203,33 @@ function renderError(err) {
 // las demás ciudades, y renderizamos toda la información en el DOM.
 // Si hay algún error durante la carga de los datos, mostramos un mensaje de
 // error en el DOM.
+const currentContainer = document.querySelector('.weather-current-container');
+const hourlyContainer  = document.querySelector('.weather-hourly-container');
+const citiesContainer  = document.querySelector('.weather-cities-container');
+
+showLoading(currentContainer);
+showLoading(hourlyContainer);
+showLoading(citiesContainer);
+
 Promise.all([fetchWeatherAPI(CITY), fetchOtherCities()])
   .then(([mainData, otherCities]) => {
+    hideLoading(currentContainer);
+    hideLoading(hourlyContainer);
+    hideLoading(citiesContainer);
     renderCurrent(mainData.current, mainData.location, mainData.forecast);
     renderHourly(mainData.hourly);
     applyCityBackground(CITY);
     applySlotBackground();
     renderOtherCities(otherCities);
   })
-  .catch(renderError);
+  .catch(err => {
+    hideLoading(currentContainer);
+    hideLoading(hourlyContainer);
+    hideLoading(citiesContainer);
+    renderError(err);
+  });
 
 //IDEAS
 /*
-+ Falta añadir capa de CARGANDO, y luego mostrar los datos en el DOM.
 + Mirar los Weather Maps de la API, para mostrar un mapa con las condiciones meteorológicas.
-
 */

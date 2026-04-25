@@ -36,7 +36,7 @@ export const CITIES = [
     },
   },
   {
-    name: 'Nueva York',
+    name: 'New York',
     default: false,
     img_url: {
       size_lg: './img/weather/cities/new_york_lg.jpg',
