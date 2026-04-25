@@ -9,7 +9,8 @@ function buildNav() {
     const a = document.createElement('a');
     a.className = 'menu-item' + (item.id === page ? ' menu-item-active' : '');
     a.href = item.href;
-    a.innerHTML = `<div class="menu-icon">${item.icon}</div><span class="menu-label">${item.label}</span>`;
+    a.title = item.title;
+    a.innerHTML = `<div class="menu-icon" aria-label="${item.title}">${item.icon}</div><span class="menu-label">${item.label}</span>`;
     nav.appendChild(a);
   });
 
