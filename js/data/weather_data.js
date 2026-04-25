@@ -1,20 +1,20 @@
 export const CITIES = [
   {
-    name: 'Alcorcón',
-    default: true,
-    img_url: {
-      size_lg: './img/weather/cities/alcorcon_lg.jpg',
-      size_md: './img/weather/cities/alcorcon_md.jpg',
-      size_sm: './img/weather/cities/alcorcon_sm.jpg',
-    },
-  },
-  {
     name: 'Madrid',
-    default: false,
+    default: true,
     img_url: {
       size_lg: './img/weather/cities/madrid_lg.jpg',
       size_md: './img/weather/cities/madrid_md.jpg',
       size_sm: './img/weather/cities/madrid_sm.jpg',
+    },
+  },
+  {
+    name: 'Alcorcón',
+    default: false,
+    img_url: {
+      size_lg: './img/weather/cities/alcorcon_lg.jpg',
+      size_md: './img/weather/cities/alcorcon_md.jpg',
+      size_sm: './img/weather/cities/alcorcon_sm.jpg',
     },
   },
   {

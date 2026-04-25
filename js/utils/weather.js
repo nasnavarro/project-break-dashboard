@@ -5,8 +5,8 @@ import { CITIES, TIME_SLOTS } from '../data/weather_data.js';
 const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const dayLabel = (dateStr) => DAYS[new Date(dateStr + 'T00:00:00').getDay()];
 
-const CITY = 'Alcorcón';
 const WEATHER_API_KEY = '89762f57084d4ca89dd164642261704';
+const CITY = CITIES.find(c => c.default)?.name ?? CITIES[0].name;
 
 // Obtiene los datos del clima actual para la ciudad dada, y devuelve un objeto con la información relevante (temperatura, humedad, viento, etc.)
 export async function fetchWeatherAPI(cityName) {
@@ -114,6 +114,24 @@ function renderOtherCities(cities) {
   });
 }
 
+// Función que normaliza un string (nombre de ciudad) para compararlo de forma más flexible, eliminando mayúsculas, tildes, espacios extra, etc.
+function normalize(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// Función que compara el nombre de la ciudad introducido por el usuario con el
+// nombre de la ciudad devuelto por la API, para evitar errores de búsqueda
+// debido a diferencias en mayúsculas, tildes, espacios, etc.
+// Devuelve true si el nombre introducido parece coincidir con la ciudad encontrada,
+// o false si no hay una coincidencia razonable.
+// El api devuelve como Fallback San Marino para búsquedas no encontradas, así que si el nombre introducido no se parece en absoluto a San Marino, asumimos que no se han encontrado resultados válidos.
+function looksLikeMatch(query, location) {
+  const words = normalize(query).split(/\s+/).filter(w => w.length >= 3);
+  if (words.length === 0) return true;
+  const haystack = normalize(`${location.name} ${location.region} ${location.country}`);
+  return words.some(w => haystack.includes(w));
+}
+
 // Función que carga el pronóstico de la ciudad dada, renderiza los datos en el DOM y aplica el fondo correspondiente a esa ciudad
 function loadCity(cityName) {
   showLoading(currentContainer);
@@ -122,6 +140,15 @@ function loadCity(cityName) {
     .then(data => {
       hideLoading(currentContainer);
       hideLoading(hourlyContainer);
+      if (!looksLikeMatch(cityName, data.location)) {
+        document.getElementById('weather-current').innerHTML = `
+          <p class="weather-error">
+            No se han encontrado resultados para <strong>${cityName}</strong>.
+          </p>
+        `;
+        document.getElementById('weather-hourly').innerHTML = '';
+        return;
+      }
       renderCurrent(data.current, data.location, data.forecast);
       renderHourly(data.hourly);
       applyCityBackground(cityName);
@@ -130,10 +157,17 @@ function loadCity(cityName) {
     .catch(err => {
       hideLoading(currentContainer);
       hideLoading(hourlyContainer);
-      console.error('[weather] loadCity:', err.message);
+      document.getElementById('weather-current').innerHTML = `
+        <p class="weather-error">
+          No se han encontrado resultados para <strong>${cityName}</strong>.<br>
+          <span>${err.message}</span>
+        </p>
+      `;
+      document.getElementById('weather-hourly').innerHTML = '';
     });
 }
 
+// Función que muestra un overlay de carga en el contenedor dado, para indicar que se están cargando los datos del clima
 function showLoading(container) {
   const overlay = document.createElement('div');
   overlay.className = 'weather-loading-overlay';
@@ -141,6 +175,7 @@ function showLoading(container) {
   container.appendChild(overlay);
 }
 
+// Función que oculta el overlay de carga del contenedor dado, una vez que se han cargado los datos del clima
 function hideLoading(container) {
   container.querySelector('.weather-loading-overlay')?.remove();
 }
@@ -180,8 +215,11 @@ function applySlotBackground() {
 // Función que aplica el fondo correspondiente a la ciudad dada en el contenedor del pronóstico actual
 function applyCityBackground(cityName) {
   const city = CITIES.find(c => c.name === cityName);
-  if (!city) return;
   const container = document.querySelector('.weather-current-container');
+  if (!city) {
+    container.style.backgroundImage = '';
+    return;
+  }
   const url = resolveImageUrl(city.img_url);
   container.style.backgroundImage = `linear-gradient(rgba(13,17,23,0.78), rgba(13,17,23,0.78)), url('${url}')`;
   container.style.backgroundSize = 'cover';
@@ -230,6 +268,17 @@ if (document.getElementById('weather-current')) {
       hideLoading(citiesContainer);
       renderError(err);
     });
+
+  const input = document.getElementById('weather-city-input');
+  const btn   = document.getElementById('weather-city-search-btn');
+
+  function searchCity() {
+    const name = input.value.trim();
+    if (name) loadCity(name);
+  }
+
+  btn.addEventListener('click', searchCity);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') searchCity(); });
 }
 
 //IDEAS

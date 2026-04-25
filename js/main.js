@@ -13,7 +13,7 @@ if (document.body.dataset.page === 'index') {
       .then(({ location, current, forecast }) => {
         const section = document.getElementById('section-weather');
         const bgUrl = resolveImageUrl(defaultCity.img_url);
-        section.style.backgroundImage = `linear-gradient(rgba(13,17,23,0.88), rgba(13,17,23,0.88)), url('${bgUrl}')`;
+        section.style.backgroundImage = `linear-gradient(rgba(13,17,23,0.75), rgba(13,17,23,0.75)), url('${bgUrl}')`;
         section.style.backgroundSize = 'cover';
         section.style.backgroundPosition = 'center';
         section.innerHTML = `
