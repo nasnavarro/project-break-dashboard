@@ -1,18 +1,6 @@
+@import './vars.css';
 @import './reset.css';
 @import './nav.css';
-
-:root {
-  --color-primary:    #36498F;
-  --color-accent:     #A4FF00;
-  --color-surface:    #161D20;
-  --color-bg:         #0D1117;
-  --color-text:       #FFFFFF;
-  --color-text-muted: #A4A29E;
-  --font-sans: 'Inter', 'Montserrat', system-ui, sans-serif;
-  --radius: 0.75rem;
-  --transition: 200ms ease;
-  --overlay: linear-gradient(rgba(13, 17, 23, 0.55), rgba(13, 17, 23, 0.55));
-}
 
 body {
   font-family: var(--font-sans);
@@ -24,5 +12,5 @@ body {
 }
 
 main {
-  padding: 2rem;
+  padding: 1rem;
 }

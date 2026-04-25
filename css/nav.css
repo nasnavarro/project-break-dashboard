@@ -1,6 +1,6 @@
 .menu {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
