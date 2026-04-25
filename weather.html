@@ -11,7 +11,46 @@
   </head>
   <body data-page="weather">
 
-    <main>WEATHER</main>
+    <main class="weather-main">
+
+      <section class="weather-current" id="weather-current">
+        <div class="weather-current-header">
+          <img class="weather-current-icon" id="weather-icon" src="" alt="" />
+          <div>
+            <p class="weather-location" id="weather-location"></p>
+            <p class="weather-description" id="weather-description"></p>
+          </div>
+        </div>
+        <div class="weather-current-data">
+          <div class="weather-stat">
+            <span class="weather-stat-value" id="weather-temp"></span>
+            <span class="weather-stat-label">Temperatura</span>
+          </div>
+          <div class="weather-stat">
+            <span class="weather-stat-value" id="weather-feels"></span>
+            <span class="weather-stat-label">Sensación</span>
+          </div>
+          <div class="weather-stat">
+            <span class="weather-stat-value" id="weather-humidity"></span>
+            <span class="weather-stat-label">Humedad</span>
+          </div>
+          <div class="weather-stat">
+            <span class="weather-stat-value" id="weather-wind"></span>
+            <span class="weather-stat-label">Viento</span>
+          </div>
+          <div class="weather-stat">
+            <span class="weather-stat-value" id="weather-cloud"></span>
+            <span class="weather-stat-label">Nubosidad</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="weather-hourly-container">
+        <h2 class="weather-section-title">Previsión por horas</h2>
+        <section class="weather-hourly" id="weather-hourly"></section>
+      </div>
+
+    </main>
 
   <script type="module" src="./js/main.js"></script>
   <script type="module" src="./js/utils/weather.js"></script>

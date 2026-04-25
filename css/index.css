@@ -4,8 +4,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  height: 100vh;
-  padding-bottom: var(--menu-height);
+  height: calc(100vh - var(--menu-height));
 }
 
 .dashboard-section {
@@ -22,7 +21,6 @@
   .dashboard-grid {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, 1fr);
-    padding-bottom: 0;
-    padding-top: var(--menu-height);
+    height: calc(100vh - var(--menu-height));
   }
 }

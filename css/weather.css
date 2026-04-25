@@ -1,3 +1,129 @@
 @import './common.css';
 
-/* weather-specific styles */
+.weather-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 860px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* — Bloque actual — */
+.weather-current {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.weather-current-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.weather-current-icon {
+  width: 72px;
+  height: 72px;
+}
+
+.weather-location {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.weather-description {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+}
+
+.weather-current-data {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.weather-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 80px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.5rem;
+}
+
+.weather-stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.weather-stat-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.weather-hourly-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.06);
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.weather-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* — Bloque horario — */
+.weather-hourly {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+  overflow-x: hidden;
+}
+
+.weather-hour {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+}
+
+.weather-hour-time {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.weather-hour img {
+  width: 40px;
+  height: 40px;
+}
+
+.weather-hour-temp {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.weather-hour-rain {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+}
