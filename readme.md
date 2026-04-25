@@ -121,6 +121,13 @@ Crea una página que tendrá lo siguiente:
 - Piensa si necesitas solo un endpoint o varios. Revisa que trae cada petición.
 - Estructura bien tu código
 
+### RESOLUCIÓN REALIZADA
+Además de cumplir con las especificaciones del ejercicio, se han realizado las siguientes implementaciones:
+- Incluir fecha máxima y mínima del día.
+- Se definen en js de datos slots de tiempo, dividiendo el día en 4 periodos: mañana, mediodía, tarde y noche, y se asignan imágenes para cada slot, mostrándose la imagen correspondiente (en el tamaño adecuado según display), según la hora en que se acceda a la página.
+- Se define en archivo de datos los orígenes de ciudades a cargar, incluyendo  imagen de la ciudad, que se cargará como background en el bloque de información del clima del día.
+- Se permite cambiar de ciudad entre las predefinidas.
+- Carga la info de clima actual de las ciudades habilitadas con un promise all settled, tras cargarse la info completa de la ciudad predefinida.
 ## Imagenes random background:
 
 ### ¿Como funciona?
