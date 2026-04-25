@@ -9,7 +9,7 @@ const CITY = 'Alcorcón';
 const WEATHER_API_KEY = '89762f57084d4ca89dd164642261704';
 
 // Obtiene los datos del clima actual para la ciudad dada, y devuelve un objeto con la información relevante (temperatura, humedad, viento, etc.)
-async function fetchWeatherAPI(cityName) {
+export async function fetchWeatherAPI(cityName) {
   const url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(cityName)}&days=1&aqi=no&alerts=no&lang=es`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`WeatherAPI HTTP ${res.status}`);
@@ -63,6 +63,7 @@ function renderCurrent(current, location, forecast) {
   document.getElementById('weather-icon').alt                  = current.description;
   document.getElementById('weather-location').textContent      = `${location.name}, ${location.country}`;
   document.getElementById('weather-description').textContent   = current.description;
+  document.getElementById('weather-coords').textContent        = `${location.lat}°N ${location.lon}°E`;
   document.getElementById('weather-temp').textContent          = `${current.temp} °C`;
   document.getElementById('weather-feels').textContent         = `${current.feelsLike} °C`;
   document.getElementById('weather-humidity').textContent      = `${current.humidity} %`;
@@ -89,7 +90,7 @@ function renderHourly(hourly) {
 function renderOtherCities(cities) {
   const container = document.getElementById('weather-cities');
   container.innerHTML = cities.map(({ cityData, cityMeta }) => {
-    const url = resolveSlotUrl(cityMeta.img_url);
+    const url = resolveImageUrl(cityMeta.img_url);
     return `
       <div class="weather-city-card" style="
         background-image: linear-gradient(rgba(13,17,23,0.55), rgba(13,17,23,0.55)), url('${url}');
@@ -145,7 +146,7 @@ function hideLoading(container) {
 }
 
 // Función que resuelve la URL de la imagen de fondo según el tamaño de pantalla actual (sm, md o lg)
-function resolveSlotUrl(img_url) {
+export function resolveImageUrl(img_url) {
   if (window.innerWidth <= 768)  return img_url.size_sm;
   if (window.innerWidth <= 1280) return img_url.size_md;
   return img_url.size_lg;
@@ -170,7 +171,7 @@ function applySlotBackground() {
   const slot = getCurrentSlot();
   if (!slot) return;
   const container = document.querySelector('.weather-hourly-container');
-  const url = resolveSlotUrl(slot.img_url);
+  const url = resolveImageUrl(slot.img_url);
   container.style.backgroundImage = `linear-gradient(rgba(13,17,23,0.78), rgba(13,17,23,0.78)), url('${url}')`;
   container.style.backgroundSize = 'cover';
   container.style.backgroundPosition = 'center';
@@ -181,7 +182,7 @@ function applyCityBackground(cityName) {
   const city = CITIES.find(c => c.name === cityName);
   if (!city) return;
   const container = document.querySelector('.weather-current-container');
-  const url = resolveSlotUrl(city.img_url);
+  const url = resolveImageUrl(city.img_url);
   container.style.backgroundImage = `linear-gradient(rgba(13,17,23,0.78), rgba(13,17,23,0.78)), url('${url}')`;
   container.style.backgroundSize = 'cover';
   container.style.backgroundPosition = 'center';
@@ -207,27 +208,29 @@ const currentContainer = document.querySelector('.weather-current-container');
 const hourlyContainer  = document.querySelector('.weather-hourly-container');
 const citiesContainer  = document.querySelector('.weather-cities-container');
 
-showLoading(currentContainer);
-showLoading(hourlyContainer);
-showLoading(citiesContainer);
+if (document.getElementById('weather-current')) {
+  showLoading(currentContainer);
+  showLoading(hourlyContainer);
+  showLoading(citiesContainer);
 
-Promise.all([fetchWeatherAPI(CITY), fetchOtherCities()])
-  .then(([mainData, otherCities]) => {
-    hideLoading(currentContainer);
-    hideLoading(hourlyContainer);
-    hideLoading(citiesContainer);
-    renderCurrent(mainData.current, mainData.location, mainData.forecast);
-    renderHourly(mainData.hourly);
-    applyCityBackground(CITY);
-    applySlotBackground();
-    renderOtherCities(otherCities);
-  })
-  .catch(err => {
-    hideLoading(currentContainer);
-    hideLoading(hourlyContainer);
-    hideLoading(citiesContainer);
-    renderError(err);
-  });
+  Promise.all([fetchWeatherAPI(CITY), fetchOtherCities()])
+    .then(([mainData, otherCities]) => {
+      hideLoading(currentContainer);
+      hideLoading(hourlyContainer);
+      hideLoading(citiesContainer);
+      renderCurrent(mainData.current, mainData.location, mainData.forecast);
+      renderHourly(mainData.hourly);
+      applyCityBackground(CITY);
+      applySlotBackground();
+      renderOtherCities(otherCities);
+    })
+    .catch(err => {
+      hideLoading(currentContainer);
+      hideLoading(hourlyContainer);
+      hideLoading(citiesContainer);
+      renderError(err);
+    });
+}
 
 //IDEAS
 /*

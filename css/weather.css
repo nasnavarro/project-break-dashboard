@@ -39,6 +39,12 @@
   text-transform: capitalize;
 }
 
+.weather-coords {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 .weather-current-data {
   display: flex;
   gap: 1rem;
