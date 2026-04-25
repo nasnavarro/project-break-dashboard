@@ -141,6 +141,10 @@ Además de cumplir con los objetivos fijados, se implementan las siguientes modi
 - Se organizan los fondos en un js de datos, que además de la url de la imagen, incluye la categoría a la que pertenece.
 - Se cargan en cada categoría a partir del id de página, únicamente imágenes asociadas a dicha categoría, a excepción de la home, que utiliza todas las imágenes disponibles de todas las categorías.
 - Para la aleatoreidad, se utiliza la función de Fisher-Yates, que garantiza que todas las permutaciones de elementos son igualmente probables.
+- Optimización de imágenes:
+-- Se carga la imagen de background de fondo en base al tamaño de pantalla (lg, md y sm).
+-- En caso de que no esté definido algún tamaño de imagen, se carga el inmediatamente superior de forma recursiva. Si no tiene ninguno, carga la imagen por defecto.
+-- Se dejan datos de imágenes sin rellenar por completo para verificar la funcionalidad de fallbacks de imágenes en la categoría "clock".
 _____________________________________________
 
 ### CONSEJOS GENERALES
