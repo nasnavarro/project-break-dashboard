@@ -147,6 +147,13 @@ Además de cumplir con los objetivos fijados, se implementan las siguientes modi
 - Se dejan datos de imágenes sin rellenar por completo para verificar la funcionalidad de fallbacks de imágenes en la categoría "clock".
 _____________________________________________
 
+### RESOLUCIÓN MENÚ DE NAVEGACIÓN
+
+Se crea un menú de navegación basado en iconos que esté centrado en la parte inferior en resoluciones desktop y tablet, pero que sea fijo en la parte superior para móvil por temas de accesibilidad.
+
+Identifica la página activa a partir del código de página.
+_____________________________________________
+
 ### CONSEJOS GENERALES
 - 80% Pensar, 20% programar.
 - Coge boli y papel y genera tu proyecto en un cuaderno. Divide el problema en otros pequeños y ve resolviéndolos poco a poco.

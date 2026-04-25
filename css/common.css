@@ -1,3 +1,6 @@
+@import './reset.css';
+@import './nav.css';
+
 :root {
   --color-primary:    #36498F;
   --color-accent:     #A4FF00;
@@ -10,8 +13,6 @@
   --transition: 200ms ease;
   --overlay: linear-gradient(rgba(13, 17, 23, 0.55), rgba(13, 17, 23, 0.55));
 }
-
-@import './reset.css';
 
 body {
   font-family: var(--font-sans);
