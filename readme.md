@@ -23,17 +23,17 @@ Una vez tengas el proyecto finalizado, también puede ser antes, lo subiras a gi
 Esperaremos un par de minutos, refrescaremos esa página y nos dará una URL. Ahí podras ver tu proyecto en internet.
 
 
-Vamos a ver que hay que hacer en cada uno de los proyectos: 
+Vamos a ver que hay que hacer en cada uno de los proyectos:
 
 ## Reloj digital 24h + Fecha:
 
 ### ¿Como funciona?
 Crea un página que tendrá lo siguiente:
 
-Un reloj digital con la fecha y hora actual del lugar en el que te encuentres. Tendrá las siguientes características: 
+Un reloj digital con la fecha y hora actual del lugar en el que te encuentres. Tendrá las siguientes características:
 - Por un lado tendremos un reloj digital con horas, minutos y segundos que se tendrá que actualizar automaticamente cada segundo que pase.
 - Tendrás que formatear las hora. Si las horas, minutos y segundos son menores de 10 habrá que añadir un 0 delante para que quede como 01, 02, ...
-- La fecha tendrá formato DD/MM/AAAA 
+- La fecha tendrá formato DD/MM/AAAA
 - Aparecerán unas frases dependiendo un intervalo de horas. Doy una de ejemplo aunque puedes cambiarlas a tu gusto:
   - Desde las 00:01 hasta las 07:00 Es hora de descansar. Apaga y sigue mañana
   - Desde las 07:01 hasta las 12:00 Buenos días, desayuna fuerte y a darle al código
@@ -41,7 +41,7 @@ Un reloj digital con la fecha y hora actual del lugar en el que te encuentres. T
   - Desde las 14:01 hasta las 16:00 Espero que hayas comido
   - Desde las 16:01 hasta las 18:00 Buenas tardes, el último empujón
   - Desde las 18:01 hasta las 22:00 Esto ya son horas extras, ... piensa en parar pronto
-  - Desde las 22:01 hasta las 00:00 Buenas noches, es hora de pensar en parar y descansar   
+  - Desde las 22:01 hasta las 00:00 Buenas noches, es hora de pensar en parar y descansar
 - Dale estilo con CSS
 
 ### ¿Qué usaremos?
@@ -54,7 +54,7 @@ Un reloj digital con la fecha y hora actual del lugar en el que te encuentres. T
 ### PISTAS PISTAS Y CONSEJOS
 - Aquí tienes como usar el constructor de fechas. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
 - Aquí los métodos necesarios para componerlo todo https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date
-- Aquí lo que hace y como funciona `setInterval()` https://developer.mozilla.org/es/docs/Web/API/setInterval 
+- Aquí lo que hace y como funciona `setInterval()` https://developer.mozilla.org/es/docs/Web/API/setInterval
 
 
 ## Generador de contraseñas seguras:
@@ -103,7 +103,7 @@ Crea una página que tendrá lo siguiente:
   - El estado del clima.
   - Imagen y grados celsius de nuestra ciudad.
   - Precipitaciones, humedad y viento km/h.
-- La previsión por horas en el día en el que estamos. Con su hora, imagen y grados celsius. 
+- La previsión por horas en el día en el que estamos. Con su hora, imagen y grados celsius.
 - Dale estilo con CSS.
 
 ### ¿Qué usaremos?
@@ -111,7 +111,7 @@ Crea una página que tendrá lo siguiente:
 - Necesitarás una API KEY. Podrás conseguirla entrando en la url de weatherapi y pulsando en signup. Rellena los datos que pide y nada más entrar os aparecerá esa API KEY.
 - Puedes probar que funciona en esta página: `https://www.weatherapi.com/api-explorer.aspx` metiendo la APIKEY y dándole al botón de `show response`
 - Aquí está la documentación completa `https://www.weatherapi.com/docs/`
-- Este es el `base URL` al que tendréis que acceder `http://api.weatherapi.com/v1` añadiremos detrás lo que necesitemos. 
+- Este es el `base URL` al que tendréis que acceder `http://api.weatherapi.com/v1` añadiremos detrás lo que necesitemos.
  - Este es un ejemplo de endpoint con la APIKEY y la ciudad. Solo habría que cambiar los datos de `${apiKey}` por la nuestra y `${ciudad}` por la elegida por nosotros `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&aqi=no`
 - `fetch` para hacer peticiones a la API.
 
@@ -119,23 +119,28 @@ Crea una página que tendrá lo siguiente:
 - La URL base es `http` cámbiala desde el inicio por `https` para no tener problemas en el futuro de bloqueos de seguridad.
 - Usa `promesas` o `ASYNC/AWAIT` para crear la asincronía en las peticiopnes `fetch`
 - Piensa si necesitas solo un endpoint o varios. Revisa que trae cada petición.
-- Estructura bien tu código 
+- Estructura bien tu código
 
 ## Imagenes random background:
 
 ### ¿Como funciona?
 Todas las páginas de tu proyecto tendrán una imagen random de background. Cambiará cada 15 segundos (o el tiempo que decidas).
 
-### ¿Qué usaremos? 
+### ¿Qué usaremos?
 - `Math.random()` para generar aleatoriedad
 - En esta página `https://unsplash.com/es` podrás sacar imagenes de calidad de manera gratuíta. Puedes elegir otras páginas sin problema. O directamente desde goolge. Usa 10 minagenes mínimo para darle más dinamismo
-- Estilos en línea que añadiremos con JS. 
+- Estilos en línea que añadiremos con JS.
   - Este puede ser un ejemplo: `document.body.style.backgroundImage = "url('mi-imagen.jpg')"`;
 - `setInterval` para darle ese tiempo de cambio
 
 ### PISTAS Y CONSEJOS
 Puedes generar de inicio una imagen de fondo por CSS o directamente hacer que la función se invoque y luego cada 15 segundos, o el tiempo que decidas.
 
+### RESOLUCIÓN REALIZADA
+Además de cumplir con los objetivos fijados, se implementan las siguientes modificaciones:
+- Se organizan los fondos en un js de datos, que además de la url de la imagen, incluye la categoría a la que pertenece.
+- Se cargan en cada categoría a partir del id de página, únicamente imágenes asociadas a dicha categoría, a excepción de la home, que utiliza todas las imágenes disponibles de todas las categorías.
+- Para la aleatoreidad, se utiliza la función de Fisher-Yates, que garantiza que todas las permutaciones de elementos son igualmente probables.
 _____________________________________________
 
 ### CONSEJOS GENERALES
