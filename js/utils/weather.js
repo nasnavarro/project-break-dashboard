@@ -8,9 +8,10 @@ const dayLabel = (dateStr) => DAYS[new Date(dateStr + 'T00:00:00').getDay()];
 // - Ubicación: nombre, país, latitud, longitud
 // - Clima actual: temperatura, sensación térmica, precipitaciones, humedad, velocidad del viento (km/h), nubosidad, icono y descripción
 // - Pronóstico diario en horas: hora, imagen y temperatura en ºC (máxima y mínima)
+const CITY = 'Alcorcón';
+
 async function fetchWeatherAPI() {
   const WEATHER_API_KEY = '89762f57084d4ca89dd164642261704';
-  const CITY = 'Alcorcón';
   const url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${CITY}&days=1&aqi=no&alerts=no&lang=es`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`WeatherAPI HTTP ${res.status}`);
@@ -51,7 +52,7 @@ async function fetchWeatherAPI() {
 }
 
 // Función que renderiza los datos del clima actual en el DOM
-function renderCurrent(current, location) {
+function renderCurrent(current, location, forecast) {
   document.getElementById('weather-icon').src         = current.icon;
   document.getElementById('weather-icon').alt         = current.description;
   document.getElementById('weather-location').textContent    = `${location.name}, ${location.country}`;
@@ -61,6 +62,8 @@ function renderCurrent(current, location) {
   document.getElementById('weather-humidity').textContent = `${current.humidity} %`;
   document.getElementById('weather-wind').textContent     = `${current.windSpeed} km/h`;
   document.getElementById('weather-cloud').textContent    = `${current.cloudCover} %`;
+  document.getElementById('weather-temp-max').textContent = `${forecast.max} °C`;
+  document.getElementById('weather-temp-min').textContent = `${forecast.min} °C`;
 }
 
 // Función que renderiza el pronóstico horario en el DOM
@@ -76,12 +79,24 @@ function renderHourly(hourly) {
   `).join('');
 }
 
+// Control de errores: función que muestra un mensaje de error en el DOM si no se han podido cargar los datos del clima
+function renderError(err) {
+  console.error('[weather]', err.message);
+  document.getElementById('weather-current').innerHTML = `
+    <p class="weather-error">
+      No se han podido cargar los datos para <strong>${CITY}</strong>.<br>
+      <span>${err.message}</span>
+    </p>
+  `;
+  document.getElementById('weather-hourly').innerHTML = '';
+}
+
 fetchWeatherAPI()
   .then(data => {
-    renderCurrent(data.current, data.location);
+    renderCurrent(data.current, data.location, data.forecast);
     renderHourly(data.hourly);
   })
-  .catch(err => console.error('[weather] Error al obtener los datos:', err.message));
+  .catch(renderError);
 
 //IDEAS
 /*
