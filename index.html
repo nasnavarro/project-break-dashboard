@@ -31,16 +31,7 @@
       <!-- Sección del generador de contraseñas -->
       <section class="dashboard-section" id="section-passwords">
         <h2 class="dashboard-section-title">Generador de contraseñas</h2>
-        <div class="passwords-container">
-          <p class="passwords-intro">Genera una contraseña segura de entre 12 y 50 caracteres, con al menos una mayúscula, una minúscula, un número y un símbolo.</p>
-          <div class="passwords-controls">
-            <label class="passwords-label" for="passwords-length">Longitud</label>
-            <input type="number" id="passwords-length" class="passwords-input" value="12" min="12" max="50" />
-            <button id="passwords-generate-btn" class="passwords-btn">Generar</button>
-          </div>
-          <div class="passwords-result" id="passwords-result"></div>
-          <p class="passwords-error" id="passwords-error"></p>
-        </div>
+        <div class="passwords-container" id="passwords-container"></div>
       </section>
 
       <!-- Sección del gestor de enlaces -->
@@ -52,7 +43,7 @@
 
   <script type="module" src="./js/main.js"></script>
   <script type="module" src="./js/utils/clock.js"></script>
-  <script type="module" src="./js/utils/passwords.js"></script>
+  <script type="module" src="./js/templates/passwordWidget.js"></script>
   <script type="module" src="./js/utils/links.js"></script>
   </body>
 </html>

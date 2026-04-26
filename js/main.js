@@ -6,7 +6,6 @@ import { initBackground } from './utils/background.js';
 import { initNav } from './utils/nav.js';
 import { fetchWeatherAPI, resolveImageUrl } from './utils/weather.js';
 import { CITIES } from './data/weather_data.js';
-
 // Inicializamos el fondo
 initBackground();
 // Inicializamos el menú de navegación

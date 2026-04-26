@@ -8,7 +8,7 @@ const SIMBOLOS = "!@#$%^&*()-_=+";
 
 // Genera una contraseña aleatoria con al menos una mayúscula, minúscula, número y símbolo.
 // Lanza un Error si la longitud está fuera del rango permitido (12–50).
-function generarContrasena(longitud = 12) {
+export function generarContrasena(longitud = 12) {
   if (isNaN(longitud) || longitud < 12 || longitud > 50) {
     throw new Error(`Longitud no válida: debe estar entre 12 y 50 (recibido: ${longitud}).`);
   }
@@ -29,24 +29,3 @@ function generarContrasena(longitud = 12) {
   return password;
 }
 
-// Si encuentra el elemento del widget añadimos la funcionalidad a la página.
-if (document.getElementById('passwords-result')) {
-  const input  = document.getElementById('passwords-length');
-  const btn    = document.getElementById('passwords-generate-btn');
-  const result = document.getElementById('passwords-result');
-  const error  = document.getElementById('passwords-error');
-
-  function generate() {
-    const longitud = parseInt(input.value, 10);
-    error.textContent = '';
-    try {
-      result.textContent = generarContrasena(longitud);
-    } catch (e) {
-      result.textContent = '';
-      error.textContent = e.message;
-    }
-  }
-
-  btn.addEventListener('click', generate);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
-}
