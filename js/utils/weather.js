@@ -1,5 +1,6 @@
 // Importamos las ciudades y los slots horarios desde el archivo de datos.
 import { CITIES, TIME_SLOTS } from '../data/weather_data.js';
+import { fetchJSON } from './helpers.js';
 
 const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const dayLabel = (dateStr) => DAYS[new Date(dateStr + 'T00:00:00').getDay()];
@@ -10,9 +11,7 @@ const CITY = CITIES.find(c => c.default)?.name ?? CITIES[0]?.name;
 // Obtiene los datos del clima actual para la ciudad dada, y devuelve un objeto con la información relevante (temperatura, humedad, viento, etc.)
 export async function fetchWeatherAPI(cityName, days = 1) {
   const url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(cityName)}&days=${days}&aqi=no&alerts=no&lang=es`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`WeatherAPI HTTP ${res.status}`);
-  const data = await res.json();
+  const data = await fetchJSON(url);
 
   return {
     location: {
