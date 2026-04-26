@@ -1,5 +1,6 @@
 @import './common.css';
 
+/* Estilos para el dashboard principal y sus secciones*/
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -29,6 +30,8 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-accent);
+  width: 100%;
+  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -38,6 +41,41 @@
   }
 }
 
+/* Estilos para el widget del reloj digital */
+.clock-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  flex: 1;
+  text-align: center;
+}
+
+.clock-time {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.clock-date {
+  font-size: clamp(1.2rem, 1.3vw, 1.4rem);
+  color: var(--color-text-white);
+  text-transform: capitalize;
+}
+
+.clock-message {
+  font-size: clamp(1rem, 1.1vw, 1.2rem);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Estilos para el widget del clima */
 .weather-widget {
   display: flex;
   flex-direction: column;
@@ -101,3 +139,7 @@
   color: var(--color-text-muted);
   text-align: center;
 }
+
+/* Estilos para el widget del generador de contraseñas */
+
+/* Estilos para el widget del gestor de enlaces */
