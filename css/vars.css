@@ -5,6 +5,7 @@
   --color-bg:         #0D1117;
   --color-text:       #FFFFFF;
   --color-text-muted: #A4A29E;
+  --color-warning:    #FFB800;
   --font-sans: 'Inter', 'Montserrat', system-ui, sans-serif;
   --radius: 0.75rem;
   --transition: 200ms ease;
