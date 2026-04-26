@@ -205,6 +205,47 @@
   border-color: var(--color-accent);
 }
 
+.passwords-result-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2rem;
+}
+
+.passwords-copy-btn[hidden] {
+  display: none;
+}
+
+.passwords-copy-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.passwords-copy-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.passwords-copy-btn--copied {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.passwords-copy-feedback {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
 .passwords-result {
   font-size: 1.4rem;
   font-weight: 700;
