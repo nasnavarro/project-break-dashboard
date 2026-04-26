@@ -28,6 +28,11 @@
   height: 72px;
 }
 
+.weather-current-icon[src=""],
+.weather-current-icon:not([src]) {
+  visibility: hidden;
+}
+
 .weather-location {
   font-size: 1.5rem;
   font-weight: 600;
