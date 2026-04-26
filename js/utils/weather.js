@@ -6,11 +6,11 @@ const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const dayLabel = (dateStr) => DAYS[new Date(dateStr + 'T00:00:00').getDay()];
 
 const WEATHER_API_KEY = '89762f57084d4ca89dd164642261704';
-const CITY = CITIES.find(c => c.default)?.name ?? CITIES[0].name;
+const CITY = CITIES.find(c => c.default)?.name ?? CITIES[0]?.name;
 
 // Obtiene los datos del clima actual para la ciudad dada, y devuelve un objeto con la información relevante (temperatura, humedad, viento, etc.)
-export async function fetchWeatherAPI(cityName) {
-  const url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(cityName)}&days=1&aqi=no&alerts=no&lang=es`;
+export async function fetchWeatherAPI(cityName, days = 1) {
+  const url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(cityName)}&days=${days}&aqi=no&alerts=no&lang=es`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`WeatherAPI HTTP ${res.status}`);
   const data = await res.json();
@@ -37,6 +37,14 @@ export async function fetchWeatherAPI(cityName) {
       max:   Math.round(data.forecast.forecastday[0].day.maxtemp_c),
       min:   Math.round(data.forecast.forecastday[0].day.mintemp_c),
     },
+    forecast7: data.forecast.forecastday.map(day => ({
+      label:       dayLabel(day.date),
+      icon:        'https:' + day.day.condition.icon,
+      description: day.day.condition.text,
+      max:         Math.round(day.day.maxtemp_c),
+      min:         Math.round(day.day.mintemp_c),
+      rain:        day.day.daily_chance_of_rain,
+    })),
     hourly: data.forecast.forecastday[0].hour.map(h => ({
       hour:        h.time.split(' ')[1].slice(0, 5),
       temp:        Math.round(h.temp_c),
@@ -82,6 +90,18 @@ function renderHourly(hourly) {
       <img src="${h.icon}" alt="${h.description}" />
       <span class="weather-hour-temp">${h.temp} °C</span>
       <span class="weather-hour-rain" style="visibility:${h.rain > 0 ? 'visible' : 'hidden'}">${h.rain}%</span>
+    </div>
+  `).join('');
+}
+
+function renderForecast7(days) {
+  const container = document.getElementById('weather-forecast7');
+  container.innerHTML = days.map(day => `
+    <div class="weather-forecast-day">
+      <span class="weather-forecast-label">${day.label}</span>
+      <img src="${day.icon}" alt="${day.description}" />
+      <span class="weather-forecast-temp">${day.max}° / ${day.min}°</span>
+      <span class="weather-forecast-rain" style="visibility:${day.rain > 0 ? 'visible' : 'hidden'}">${day.rain}%</span>
     </div>
   `).join('');
 }
@@ -136,10 +156,12 @@ function looksLikeMatch(query, location) {
 function loadCity(cityName) {
   showLoading(currentContainer);
   showLoading(hourlyContainer);
-  fetchWeatherAPI(cityName)
+  showLoading(forecast7Container);
+  fetchWeatherAPI(cityName, 7)
     .then(data => {
       hideLoading(currentContainer);
       hideLoading(hourlyContainer);
+      hideLoading(forecast7Container);
       if (!looksLikeMatch(cityName, data.location)) {
         document.getElementById('weather-current').innerHTML = `
           <p class="weather-error">
@@ -147,16 +169,19 @@ function loadCity(cityName) {
           </p>
         `;
         document.getElementById('weather-hourly').innerHTML = '';
+        document.getElementById('weather-forecast7').innerHTML = '';
         return;
       }
       renderCurrent(data.current, data.location, data.forecast);
       renderHourly(data.hourly);
+      renderForecast7(data.forecast7);
       applyCityBackground(cityName);
       currentContainer.scrollIntoView({ behavior: 'smooth' });
     })
     .catch(err => {
       hideLoading(currentContainer);
       hideLoading(hourlyContainer);
+      hideLoading(forecast7Container);
       document.getElementById('weather-current').innerHTML = `
         <p class="weather-error">
           No se han encontrado resultados para <strong>${cityName}</strong>.<br>
@@ -244,41 +269,52 @@ function renderError(err) {
 // error en el DOM.
 const currentContainer = document.querySelector('.weather-current-container');
 const hourlyContainer  = document.querySelector('.weather-hourly-container');
+const forecast7Container = document.querySelector('.weather-forecast7-container');
 const citiesContainer  = document.querySelector('.weather-cities-container');
 
 if (document.getElementById('weather-current')) {
-  showLoading(currentContainer);
-  showLoading(hourlyContainer);
-  showLoading(citiesContainer);
-
-  Promise.all([fetchWeatherAPI(CITY), fetchOtherCities()])
-    .then(([mainData, otherCities]) => {
-      hideLoading(currentContainer);
-      hideLoading(hourlyContainer);
-      hideLoading(citiesContainer);
-      renderCurrent(mainData.current, mainData.location, mainData.forecast);
-      renderHourly(mainData.hourly);
-      applyCityBackground(CITY);
-      applySlotBackground();
-      renderOtherCities(otherCities);
-    })
-    .catch(err => {
-      hideLoading(currentContainer);
-      hideLoading(hourlyContainer);
-      hideLoading(citiesContainer);
-      renderError(err);
-    });
-
   const input = document.getElementById('weather-city-input');
   const btn   = document.getElementById('weather-city-search-btn');
 
+  // Función para cargar una ciudad en base a un texto introducido por el usuario.
   function searchCity() {
     const name = input.value.trim();
     if (name) loadCity(name);
   }
 
+  // Event listeners para el botón de búsqueda y la tecla Enter en el input
   btn.addEventListener('click', searchCity);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') searchCity(); });
+
+  if (!CITY) {
+    renderError(new Error('No hay ninguna ciudad predefinida configurada.'));
+  } else {
+    showLoading(currentContainer);
+    showLoading(hourlyContainer);
+    showLoading(forecast7Container);
+    showLoading(citiesContainer);
+
+    Promise.all([fetchWeatherAPI(CITY, 7), fetchOtherCities()])
+      .then(([mainData, otherCities]) => {
+        hideLoading(currentContainer);
+        hideLoading(hourlyContainer);
+        hideLoading(forecast7Container);
+        hideLoading(citiesContainer);
+        renderCurrent(mainData.current, mainData.location, mainData.forecast);
+        renderHourly(mainData.hourly);
+        renderForecast7(mainData.forecast7);
+        applyCityBackground(CITY);
+        applySlotBackground();
+        renderOtherCities(otherCities);
+      })
+      .catch(err => {
+        hideLoading(currentContainer);
+        hideLoading(hourlyContainer);
+        hideLoading(forecast7Container);
+        hideLoading(citiesContainer);
+        renderError(err);
+      });
+  }
 }
 
 //IDEAS

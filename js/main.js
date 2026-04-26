@@ -1,12 +1,21 @@
+// Importamos las funciones necesarias:
+// + Inicialización el fondo
+// + Menú de navegación
+// + Sección del clima
 import { initBackground } from './utils/background.js';
 import { initNav } from './utils/nav.js';
 import { fetchWeatherAPI, resolveImageUrl } from './utils/weather.js';
 import { CITIES } from './data/weather_data.js';
 
+// Inicializamos el fondo
 initBackground();
+// Inicializamos el menú de navegación
 initNav();
 
+// Sólo en la página principal, cargamos el clima de la ciudad por defecto y mostramos
+// el widget meteorológico adaptado a la home.
 if (document.body.dataset.page === 'index') {
+  // Obtenemos la ciudad predefinida (la que tenga default: true) para cargar su clima al inicio.
   const defaultCity = CITIES.find(c => c.default);
   if (defaultCity) {
     fetchWeatherAPI(defaultCity.name)
@@ -56,6 +65,14 @@ if (document.body.dataset.page === 'index') {
           </div>
         `;
       })
-      .catch(err => console.error('[weather_home]', err.message));
+      .catch(err => {
+        document.getElementById('section-weather').innerHTML += `
+          <p class="weather-error">${err.message}</p>
+        `;
+      });
+  } else {
+    document.getElementById('section-weather').innerHTML += `
+      <p class="weather-error">No hay ninguna ciudad predefinida configurada.</p>
+    `;
   }
 }

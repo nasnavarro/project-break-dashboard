@@ -170,6 +170,57 @@
   color: var(--color-accent);
 }
 
+/* — Previsión 7 días — */
+.weather-forecast7-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.weather-forecast7 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5rem;
+}
+
+.weather-forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.weather-forecast-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.weather-forecast-day img {
+  width: 40px;
+  height: 40px;
+}
+
+.weather-forecast-temp {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.weather-forecast-rain {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+}
+
 /* — Otras ciudades — */
 .weather-cities-container {
   display: flex;
