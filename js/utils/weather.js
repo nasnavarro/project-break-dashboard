@@ -1,5 +1,4 @@
-// weather module
-
+// Importamos las ciudades y los slots horarios desde el archivo de datos.
 import { CITIES, TIME_SLOTS } from '../data/weather_data.js';
 
 const DAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
