@@ -138,6 +138,12 @@
   overflow-x: hidden;
 }
 
+@media (max-width: 768px) {
+  .weather-hourly {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .weather-hour {
   display: flex;
   flex-direction: column;
