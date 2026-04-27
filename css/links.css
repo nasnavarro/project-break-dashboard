@@ -1,3 +1,126 @@
 @import './common.css';
 
-/* links-specific styles */
+.links-main {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.links-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+}
+
+.links-form {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.links-input {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.4rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.links-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.links-input:focus {
+  border-color: var(--color-accent);
+}
+
+.links-btn {
+  padding: 0.4rem 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition), color var(--transition);
+}
+
+.links-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+
+.links-result {
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-height: 1rem;
+}
+
+.links-result--error {
+  color: var(--color-warning);
+}
+
+.links-result--success {
+  color: var(--color-accent);
+}
+
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.links-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+}
+
+.links-item-link {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity var(--transition);
+}
+
+.links-item-link:hover {
+  opacity: 0.75;
+}
+
+.links-item-delete {
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.links-item-delete:hover {
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
