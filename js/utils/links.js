@@ -15,14 +15,14 @@ const isValidUrl = (url) => {
   }
 }
 
-// Función que procesa el enlace para añadirlo a la lista.
-const validateLink = (title, url) => {
+// Función que procesa el enlace para añadirlo a la lista. (link = {title: title, url: url}).
+const validateLink = (link) => {
     let retval = {result: true, error: ''};
     //Validamos en primer lugar que los valores introducidos sean corectos
-    if(!title || !url){
+    if(!link.title || !link.url){
         retval.result = false;
         retval.error = 'Es necesario poner un título y una url para el enlace.';
-    }else if(!isValidUrl(url)){
+    }else if(!isValidUrl(link.url)){
         retval.result = false;
         retval.error = 'La url proporcionada no es válida.';
     }
@@ -31,28 +31,29 @@ const validateLink = (title, url) => {
 
 // Devuelve true si ya existe un enlace con la misma URL en el contenedor.
 // a.href devuelve una url normalizada, por lo que normalizamos tambuén el valor recibido para comparar.
-const linkExists = (url) => {
-  const normalized = new URL(url).href;
+// (link = {title: title, url: url}).
+const linkExists = (link) => {
+  const normalized = new URL(link.url).href;
   return [...linksDiv.querySelectorAll('.links-item-link')].some(a => a.href === normalized);
 }
 
-// Crea y añade al contenedor un elemento visual para el enlace dado.
-const createLinkElement = (title, url) => {
+// Crea y añade al contenedor un elemento visual para el enlace dado. (link = {title: title, url: url}).
+const createLinkElement = (link) => {
   const item = document.createElement('div');
   item.className = 'links-item';
 
-  const link = document.createElement('a');
-  link.className = 'links-item-link';
-  link.href = url;
-  link.textContent = title;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
+  const newlink = document.createElement('a');
+  newlink.className = 'links-item-link';
+  newlink.href = link.url;
+  newlink.textContent = link.title;
+  newlink.target = '_blank';
+  newlink.rel = 'noopener noreferrer';
 
   const deleteBtn = document.createElement('button');
   deleteBtn.className = 'links-item-delete';
   deleteBtn.textContent = '×';
 
-  item.append(link, deleteBtn);
+  item.append(newlink, deleteBtn);
   linksDiv.appendChild(item);
 }
 
@@ -66,15 +67,15 @@ const addLink = () => {
     //Si no existe algún elemento de los que debemos utilizar, hacemos una salida limpia.
     if(!linkTitle || !linkUrl || !linkAddMessage || !linksDiv) return false;
 
-    let title = linkTitle.value;
-    let url = linkUrl.value;
+    //Guardamos los valores en un objeto, que nos valdrá para el LocalStorage además de para el DOM.
+    let link = {title: linkTitle.value, url: linkUrl.value};
 
     //Verificamos el titulo y la url
-    const validate = validateLink(title, url);
+    const validate = validateLink(link);
     if(validate.result !== true){
         linkAddMessage.classList.add('links-result-error');
         linkAddMessage.textContent = validate.error;
-    } else if (linkExists(url)) {
+    } else if (linkExists(link)) {
         linkAddMessage.classList.add('links-result-error');
         linkAddMessage.textContent = 'Este enlace ya está en la lista.';
     } else {
@@ -82,7 +83,7 @@ const addLink = () => {
         linkAddMessage.classList.remove('links-result-error');
         linkAddMessage.textContent = '';
         //Añadimos el enlace al contenedor.
-        createLinkElement(title, url);
+        createLinkElement(link);
         //Añadimos el enlace al LocalStorage.
 
     }
