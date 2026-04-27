@@ -1,4 +1,9 @@
 // Módulo de generación de enlaces
+
+// Constante que define el nombre de la lista de LocalStorage.
+const LS_LINKS_KEY = "my_links";
+
+// Elementos del DOM.
 const linkTitle = document.getElementById('link-title');
 const linkUrl = document.getElementById('link-url');
 const linkAddBtn = document.getElementById('link-add-btn');
@@ -59,7 +64,31 @@ const createLinkElement = (link) => {
 
 // Elimina un enlace del DOM.
 const deleteLink = (e) => {
-  e.target.closest('.links-item').remove();
+  const item = e.target.closest('.links-item');
+  const link_a = item.querySelector('.links-item-link');
+  // Borramos el enlace de localStorage.
+  removeStoredLinkFromUrl(link_a.href);
+  // Borramos el elemento del DOM.
+  item.remove();
+}
+
+// Función que guarda en localStorage un enlace
+const storeLink = link => {
+    // Obtenemos los enlaces que haya guardados. Si está vacío, empezamos con nuevo array vacío.
+    const ls = localStorage.getItem(LS_LINKS_KEY);
+    const ls_links = ls ? JSON.parse(ls) : [];
+    // Añadimos el nuevo enlace.
+    ls_links.push(link);
+    //Lo guardamos convirtiéndolo a string.
+    localStorage.setItem(LS_LINKS_KEY, JSON.stringify(ls_links));
+}
+
+//Función que elimina una entrada de link de localStorage a partir de la url del enlace.
+const removeStoredLinkFromUrl = (url) => {
+    const ls = localStorage.getItem(LS_LINKS_KEY);
+    if (!ls) return;
+    const filtered = JSON.parse(ls).filter(link => new URL(link.url).href !== url);
+    localStorage.setItem(LS_LINKS_KEY, JSON.stringify(filtered));
 }
 
 // Función que añade un enlace
@@ -85,7 +114,7 @@ const addLink = () => {
         //Añadimos el enlace al contenedor.
         createLinkElement(link);
         //Añadimos el enlace al LocalStorage.
-
+        storeLink(link);
     }
 }
 
@@ -98,3 +127,17 @@ linksDiv.addEventListener('click', e => {
 linkAddBtn.addEventListener('click', addLink);
 linkUrl.addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
 
+// Inicialización
+const init = () => {
+    //Si existe el contenedor de los enlaces, cargamos en el los enlaces.
+    if(linksDiv){
+        //Obtenemos los enlaces que haya en localStorage y los cargamos en el DOM al inicio.
+        const ls = localStorage.getItem(LS_LINKS_KEY);
+        const ls_links = ls ? JSON.parse(ls) : [];
+        ls_links.forEach(link => {
+            createLinkElement(link);
+        })
+    }
+};
+
+init();
