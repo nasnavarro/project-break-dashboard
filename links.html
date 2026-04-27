@@ -14,23 +14,10 @@
     <main class="links-main">
       <h1 class="page-title">Gestor de enlaces</h1>
 
-      <div class="links-container">
-        <div class="links-form">
-          <input type="text" id="link-title" class="links-input" placeholder="Título" />
-          <input type="url" id="link-url" class="links-input" placeholder="https://..." />
-          <button id="link-add-btn" class="links-btn">Añadir enlace</button>
-        </div>
-        <p class="links-result" id="link-add-result"></p>
-        <div class="links-sort">
-          <span class="links-sort-label">Ordenación</span>
-          <button id="link-sort-az" class="links-sort-btn">AZ ↑</button>
-          <button id="link-sort-za" class="links-sort-btn">ZA ↓</button>
-        </div>
-        <div class="links-list" id="links-list"></div>
-      </div>
+      <div class="links-container" id="links-container"></div>
     </main>
 
   <script type="module" src="./js/main.js"></script>
-  <script type="module" src="./js/utils/links.js"></script>
+  <script type="module" src="./js/templates/linkWidget.js"></script>
   </body>
 </html>

@@ -1,17 +1,9 @@
-// Módulo de generación de enlaces
+// Módulo de lógica pura para el gestor de enlaces.
 
-// Constante que define el nombre de la lista de LocalStorage.
-const LS_LINKS_KEY = "my_links";
-
-// Elementos del DOM.
-const linkTitle = document.getElementById('link-title');
-const linkUrl = document.getElementById('link-url');
-const linkAddBtn = document.getElementById('link-add-btn');
-const linkAddMessage = document.getElementById('link-add-result');
-const linksDiv = document.getElementById('links-list');
+export const LS_LINKS_KEY = 'my_links';
 
 // Devuelve true si el string es una URL válida con protocolo http o https.
-const isValidUrl = (url) => {
+export const isValidUrl = (url) => {
   try {
     const parsed = new URL(url);
     return parsed.protocol === 'http:' || parsed.protocol === 'https:';
@@ -20,158 +12,40 @@ const isValidUrl = (url) => {
   }
 }
 
-// Función que procesa el enlace para añadirlo a la lista. (link = {title: title, url: url}).
-const validateLink = (link) => {
-    let retval = {result: true, error: ''};
-    //Validamos en primer lugar que los valores introducidos sean corectos
-    if(!link.title || !link.url){
-        retval.result = false;
-        retval.error = 'Es necesario poner un título y una url para el enlace.';
-    }else if(!isValidUrl(link.url)){
-        retval.result = false;
-        retval.error = 'La url proporcionada no es válida.';
-    }
-    return retval;
+// Devuelve {result, error} tras validar título y URL. (link = {title, url}).
+export const validateLink = (link) => {
+  if (!link.title || !link.url) return { result: false, error: 'Es necesario poner un título y una url para el enlace.' };
+  if (!isValidUrl(link.url))    return { result: false, error: 'La url proporcionada no es válida.' };
+  return { result: true, error: '' };
 }
 
-// Devuelve true si ya existe un enlace con la misma URL en el contenedor.
-// a.href devuelve una url normalizada, por lo que normalizamos tambuén el valor recibido para comparar.
-// (link = {title: title, url: url}).
-const linkExists = (link) => {
-  const normalized = new URL(link.url).href;
-  return [...linksDiv.querySelectorAll('.links-item-link')].some(a => a.href === normalized);
+// Guarda un enlace en localStorage.
+export const storeLink = (link) => {
+  const ls = localStorage.getItem(LS_LINKS_KEY);
+  const links = ls ? JSON.parse(ls) : [];
+  links.push(link);
+  localStorage.setItem(LS_LINKS_KEY, JSON.stringify(links));
 }
 
-// Crea y añade al contenedor un elemento visual para el enlace dado. (link = {title: title, url: url}).
-const createLinkElement = (link) => {
-  const item = document.createElement('div');
-  item.className = 'links-item';
-
-  const newlink = document.createElement('a');
-  newlink.className = 'links-item-link';
-  newlink.href = link.url;
-  newlink.textContent = link.title;
-  newlink.target = '_blank';
-  newlink.rel = 'noopener noreferrer';
-
-  const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'links-item-delete';
-  deleteBtn.textContent = '×';
-
-  item.append(newlink, deleteBtn);
-  linksDiv.appendChild(item);
-}
-
-// Elimina un enlace del DOM.
-const deleteLink = (e) => {
-  const item = e.target.closest('.links-item');
-  const link_a = item.querySelector('.links-item-link');
-  // Borramos el enlace de localStorage.
-  removeStoredLinkFromUrl(link_a.href);
-  // Borramos el elemento del DOM.
-  item.remove();
-  // Renderizamos de nuevo los elementos
-  renderAllLimks();
-}
-
-// Función que guarda en localStorage un enlace
-const storeLink = link => {
-    // Obtenemos los enlaces que haya guardados. Si está vacío, empezamos con nuevo array vacío.
-    const ls = localStorage.getItem(LS_LINKS_KEY);
-    const ls_links = ls ? JSON.parse(ls) : [];
-    // Añadimos el nuevo enlace.
-    ls_links.push(link);
-    //Lo guardamos convirtiéndolo a string.
-    localStorage.setItem(LS_LINKS_KEY, JSON.stringify(ls_links));
-}
-
-//Función que elimina una entrada de link de localStorage a partir de la url del enlace.
-const removeStoredLinkFromUrl = (url) => {
-    const ls = localStorage.getItem(LS_LINKS_KEY);
-    if (!ls) return;
-    const filtered = JSON.parse(ls).filter(link => new URL(link.url).href !== url);
-    localStorage.setItem(LS_LINKS_KEY, JSON.stringify(filtered));
-}
-
-// Función que añade un enlace
-const addLink = () => {
-    //Si no existe algún elemento de los que debemos utilizar, hacemos una salida limpia.
-    if(!linkTitle || !linkUrl || !linkAddMessage || !linksDiv) return false;
-
-    //Guardamos los valores en un objeto, que nos valdrá para el LocalStorage además de para el DOM.
-    let link = {title: linkTitle.value, url: linkUrl.value};
-
-    //Verificamos el titulo y la url
-    const validate = validateLink(link);
-    if(validate.result !== true){
-        linkAddMessage.classList.add('links-result-error');
-        linkAddMessage.textContent = validate.error;
-    } else if (linkExists(link)) {
-        linkAddMessage.classList.add('links-result-error');
-        linkAddMessage.textContent = 'Este enlace ya está en la lista.';
-    } else {
-        //Limpiamos el contenedor de mensajes y le quitamos la clase de error.
-        linkAddMessage.classList.remove('links-result-error');
-        linkAddMessage.textContent = '';
-        //Añadimos el enlace al LocalStorage.
-        storeLink(link);
-        //Añadimos el enlace al contenedor.
-        createLinkElement(link);
-        //Borramos el formulario
-        if(linkTitle && linkUrl){
-            linkTitle.value = '';
-            linkUrl.value = '';
-        }
-    }
-}
-
-// Ordena los enlaces de localStorage por título y re-renderiza la lista.
-const sortLinks = (direction) => {
+// Elimina de localStorage el enlace con la URL indicada (normalizada).
+export const removeStoredLinkFromUrl = (url) => {
   const ls = localStorage.getItem(LS_LINKS_KEY);
   if (!ls) return;
-  const sorted = JSON.parse(ls).sort((a, b) => direction === 'az'
+  const filtered = JSON.parse(ls).filter(link => new URL(link.url).href !== url);
+  localStorage.setItem(LS_LINKS_KEY, JSON.stringify(filtered));
+}
+
+// Devuelve los enlaces guardados en localStorage.
+export const getStoredLinks = () => {
+  const ls = localStorage.getItem(LS_LINKS_KEY);
+  return ls ? JSON.parse(ls) : [];
+}
+
+// Ordena y persiste los enlaces por título en la dirección indicada ('az' o 'za').
+export const sortStoredLinks = (direction) => {
+  const sorted = getStoredLinks().sort((a, b) => direction === 'az'
     ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
     : b.title.localeCompare(a.title, 'es', { sensitivity: 'base' })
   );
   localStorage.setItem(LS_LINKS_KEY, JSON.stringify(sorted));
-  renderAllLimks();
 }
-
-document.getElementById('link-sort-az')?.addEventListener('click', () => sortLinks('az'));
-document.getElementById('link-sort-za')?.addEventListener('click', () => sortLinks('za'));
-
-// Delegación de eventos para eliminar enlaces.
-linksDiv.addEventListener('click', e => {
-  if (e.target.closest('.links-item-delete')) deleteLink(e);
-});
-
-// Añadimos una captura de evento para el botón.
-linkAddBtn.addEventListener('click', addLink);
-linkUrl.addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
-
-// Función que renderiza todos los links que haya en localStorage.
-const renderAllLimks = () => {
-    //Si existe el contenedor de los enlaces, cargamos en el los enlaces.
-    if(linksDiv){
-        //Obtenemos los enlaces que haya en localStorage y los cargamos en el DOM al inicio.
-        const ls = localStorage.getItem(LS_LINKS_KEY);
-        const ls_links = ls ? JSON.parse(ls) : [];
-        if(ls_links.length > 0){
-            linksDiv.textContent = '';
-            ls_links.forEach(link => {
-                createLinkElement(link);
-            })
-        }
-    }
-};
-
-// Inicialización
-const init = () => {
-    renderAllLimks();
-};
-
-init();
-
-/*PENDIENTE:
-+ Quitar duplicidad de código del HTML. Pasarlo a template.HTML
-*/
