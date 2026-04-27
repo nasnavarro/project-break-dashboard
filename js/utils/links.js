@@ -70,6 +70,8 @@ const deleteLink = (e) => {
   removeStoredLinkFromUrl(link_a.href);
   // Borramos el elemento del DOM.
   item.remove();
+  // Renderizamos de nuevo los elementos
+  renderAllLimks();
 }
 
 // Función que guarda en localStorage un enlace
@@ -111,12 +113,32 @@ const addLink = () => {
         //Limpiamos el contenedor de mensajes y le quitamos la clase de error.
         linkAddMessage.classList.remove('links-result-error');
         linkAddMessage.textContent = '';
-        //Añadimos el enlace al contenedor.
-        createLinkElement(link);
         //Añadimos el enlace al LocalStorage.
         storeLink(link);
+        //Añadimos el enlace al contenedor.
+        createLinkElement(link);
+        //Borramos el formulario
+        if(linkTitle && linkUrl){
+            linkTitle.value = '';
+            linkUrl.value = '';
+        }
     }
 }
+
+// Ordena los enlaces de localStorage por título y re-renderiza la lista.
+const sortLinks = (direction) => {
+  const ls = localStorage.getItem(LS_LINKS_KEY);
+  if (!ls) return;
+  const sorted = JSON.parse(ls).sort((a, b) => direction === 'az'
+    ? a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })
+    : b.title.localeCompare(a.title, 'es', { sensitivity: 'base' })
+  );
+  localStorage.setItem(LS_LINKS_KEY, JSON.stringify(sorted));
+  renderAllLimks();
+}
+
+document.getElementById('link-sort-az')?.addEventListener('click', () => sortLinks('az'));
+document.getElementById('link-sort-za')?.addEventListener('click', () => sortLinks('za'));
 
 // Delegación de eventos para eliminar enlaces.
 linksDiv.addEventListener('click', e => {
@@ -127,17 +149,29 @@ linksDiv.addEventListener('click', e => {
 linkAddBtn.addEventListener('click', addLink);
 linkUrl.addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
 
-// Inicialización
-const init = () => {
+// Función que renderiza todos los links que haya en localStorage.
+const renderAllLimks = () => {
     //Si existe el contenedor de los enlaces, cargamos en el los enlaces.
     if(linksDiv){
         //Obtenemos los enlaces que haya en localStorage y los cargamos en el DOM al inicio.
         const ls = localStorage.getItem(LS_LINKS_KEY);
         const ls_links = ls ? JSON.parse(ls) : [];
-        ls_links.forEach(link => {
-            createLinkElement(link);
-        })
+        if(ls_links.length > 0){
+            linksDiv.textContent = '';
+            ls_links.forEach(link => {
+                createLinkElement(link);
+            })
+        }
     }
 };
 
+// Inicialización
+const init = () => {
+    renderAllLimks();
+};
+
 init();
+
+/*PENDIENTE:
++ Quitar duplicidad de código del HTML. Pasarlo a template.HTML
+*/
